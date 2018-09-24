@@ -2,13 +2,13 @@ pipeline {
     agent {
         docker {
             image 'maven:3.5-jdk-8'
-            args '-v /root/.m2:/root/.m2'
+            args '-u root -v /root/.m2:/root/.m2'
         }
     }
     stages {
         stage ('Start') {
             steps {
-                slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                slackSend (channel: '#hcportal' ,color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             }
         }
         stage('Build') {
@@ -38,11 +38,11 @@ pipeline {
                             reportFiles: 'index.html',
                             reportName: 'Code Coverage Report'
             ])
-            slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend (channel: '#hcportal' ,color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
 
         failure {
-            slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend (channel: '#hcportal' ,color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
 
         always {
