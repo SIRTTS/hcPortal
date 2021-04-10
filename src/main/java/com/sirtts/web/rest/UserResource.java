@@ -200,6 +200,8 @@ public class UserResource {
     @Timed
     public ResponseEntity<Void> addPatient(String Mail, String id) {
          userService.addPaitent(Mail,id);
+         User user= userRepository.findOneByEmailIgnoreCase(Mail).get();
+        mailService.sendCreationEmail(user);
         return ResponseEntity.ok().headers(HeaderUtil.createAlert( "request send", Mail)).build();
     }
 
